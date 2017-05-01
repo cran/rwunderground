@@ -39,7 +39,7 @@ list_states = function() {
 #' list_countries()
 #' }
 list_countries = function() {
-  country_data = countrycode::countrycode_data[, c("country.name", "iso2c", "region")]
+  country_data = countrycode::countrycode_data[, c("country.name.en", "iso2c", "region")]
   country_data = dplyr::filter(country_data, !is.na(country_data$region))
   
   return(country_data)
@@ -93,7 +93,7 @@ lookup_country_code = function(name, region = NULL) {
     countries = countries[found_region, ]
   }
   
-  found = grep(name, countries$country.name, ignore.case=TRUE)
+  found = grep(name, countries$country.name.en, ignore.case=TRUE)
   
   return(countries[found, ])
 }
@@ -110,9 +110,9 @@ is_valid_territory = function(name) {
   
   if(name %in% tolower(states$abbr)) return(TRUE)
   if(name %in% tolower(states$name)) return(TRUE)
-  if(name %in% tolower(states$country.name)) return(TRUE)
+  if(name %in% tolower(states$country.name.en)) return(TRUE)
   if(name %in% tolower(states$iso2c)) return(TRUE)
-  if(name %in% tolower(countries$country.name)) return(TRUE)
+  if(name %in% tolower(countries$country.name.en)) return(TRUE)
   if(name %in% tolower(countries$iso2c)) return(TRUE)
   
   return(FALSE)
@@ -143,7 +143,7 @@ is_valid_airport = function(name) {
 #' @param city city name 
 #' @param airport_code IATA/ICAO airport code 
 #' @param PWS_id personal weather station ID 
-#' @param lat_long latitude and longitude
+#' @param lat_long latitude and longitude, as a comma-separated string
 #' @param autoip location based on IP
 #' @return formatted and validated location string
 #' @export
@@ -153,6 +153,7 @@ is_valid_airport = function(name) {
 #' set_location(territory = "Kenya", city = "Mombasa")
 #' set_location(airport_code = "SEA")
 #' set_location(PWS_id = "KMNCHASK10")
+#' set_location(lat_long="40.6892,-74.0445")
 #' set_location(autoip = "172.227.205.140")
 #' set_location()
 #' 
